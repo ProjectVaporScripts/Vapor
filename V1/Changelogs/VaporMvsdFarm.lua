@@ -51,14 +51,14 @@ local main = Instance.new("Frame")
 main.Parent = screenGui
 main.Size = uiSize
 main.Position = uiPosition
-main.BackgroundColor3 = Color3.fromRGB(0,0,0)
+main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 main.BorderSizePixel = 0
 main.BackgroundTransparency = 0
 main.ClipsDescendants = false
 
 local outline = Instance.new("UIStroke")
 outline.Parent = main
-outline.Color = Color3.fromRGB(255,255,255)
+outline.Color = Color3.fromRGB(255, 255, 255)
 outline.Thickness = 2
 
 local corner = Instance.new("UICorner", main)
@@ -77,7 +77,7 @@ title.Size = UDim2.new(1, 0, 0, titleHeight)
 title.Text = "ProjectVapor"
 title.TextScaled = true
 title.BackgroundTransparency = 1
-title.TextColor3 = Color3.new(1,1,1)
+title.TextColor3 = Color3.new(1, 1, 1)
 title.Font = Enum.Font.GothamBold
 title.TextStrokeTransparency = 0.5
 
@@ -109,15 +109,16 @@ contentContainer.Position = UDim2.new(0, 10, 0, contentOffset + 15)
 contentContainer.BackgroundTransparency = 1
 contentContainer.BorderSizePixel = 0
 contentContainer.ScrollBarThickness = 4
-contentContainer.ScrollBarImageColor3 = Color3.fromRGB(150,150,150)
+contentContainer.ScrollBarImageColor3 = Color3.fromRGB(150, 150, 150)
 contentContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+contentContainer.AutomaticCanvasSize = Enum.AutomaticSize.None
 
 local content = Instance.new("TextLabel")
 content.Parent = contentContainer
-content.Size = UDim2.new(1, -scrollPadding, 1, 0)
-content.Position = UDim2.new(0, scrollPadding/2, 0, 0)
+content.Size = UDim2.new(1, -scrollPadding, 0, 0)
+content.Position = UDim2.new(0, scrollPadding / 2, 0, 0)
 content.BackgroundTransparency = 1
-content.TextColor3 = Color3.new(1,1,1)
+content.TextColor3 = Color3.new(1, 1, 1)
 content.TextWrapped = true
 content.TextYAlignment = Enum.TextYAlignment.Top
 content.TextXAlignment = Enum.TextXAlignment.Left
@@ -131,17 +132,51 @@ content.TextStrokeTransparency = 0.3
 content.RichText = true
 content.Text = ""
 
+local TextService = game:GetService("TextService")
+
+local function stripRichText(text)
+    return (text:gsub("<[^>]->", ""))
+end
+
 local function updateScrollSize()
-    local textHeight = content.TextBounds.Y + 20
+    local containerWidth = contentContainer.AbsoluteSize.X - scrollPadding
+    if containerWidth <= 0 then
+        containerWidth = 500
+    end
+    local plainText = stripRichText(content.Text)
+    local measured = TextService:GetTextSize(
+        plainText,
+        content.TextSize,
+        content.Font,
+        Vector2.new(containerWidth, math.huge)
+    )
+    local textHeight = measured.Y + 20
     content.Size = UDim2.new(1, -scrollPadding, 0, textHeight)
     contentContainer.CanvasSize = UDim2.new(0, 0, 0, textHeight)
 end
 
-content:GetPropertyChangedSignal("TextBounds"):Connect(updateScrollSize)
+content:GetPropertyChangedSignal("Text"):Connect(updateScrollSize)
+contentContainer:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateScrollSize)
 
 local function setTab(tabName)
     if tabName == "Changelog" then
-        content.Text = "VaporMvsdFarm V1.3\n\n+ Added New case \"Cabana\" in Autobuy tab\n- fixed Autospin feature\n\n- Updated the list in Auto open tab \"Select Case\" added **Luau , Cabana , Premium Cabana Cases** \n\n- Updated Autofarm tab, You are now fully under the pad, username would not show. You can also now farm both sides **Left or Right**\n\n- Added Gun Kill all in the autofarm tab, removed the kill tab."
+        content.Text = [[VaporMvsdFarm V1.4
+
+Autofarm Tab: Updated
+
+RandomFarm - was fixed, you can now be able to automatically be placed on any open spot on the pads
+GunKillAll - was improved
+FarmingPads - was updated and improved
+
+
+AutoBuy/Auto Open case tabs: Updated
+
+Added all the new cases to buy and open
+
+
+Teleport Tab: Updated
+
+All features were updated, you can now teleport]]
     end
     task.wait()
     updateScrollSize()
@@ -155,34 +190,34 @@ local function createTab(tabName, position)
     tabButton.Size = UDim2.new(0.45, -5, 1, 0)
     tabButton.Position = UDim2.new(position, 0, 0, 0)
     tabButton.Text = tabName
-    tabButton.TextColor3 = Color3.new(1,1,1)
-    tabButton.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    tabButton.TextColor3 = Color3.new(1, 1, 1)
+    tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     tabButton.Font = Enum.Font.GothamBold
     tabButton.TextScaled = true
     tabButton.AutoButtonColor = false
-    
+
     local tabCorner = Instance.new("UICorner", tabButton)
     tabCorner.CornerRadius = UDim.new(0, 8)
-    
+
     local tabStroke = Instance.new("UIStroke", tabButton)
-    tabStroke.Color = Color3.new(1,1,1)
+    tabStroke.Color = Color3.new(1, 1, 1)
     tabStroke.Thickness = 1
-    
+
     tabButton.MouseButton1Click:Connect(function()
         if activeTab then
-            activeTab.BackgroundColor3 = Color3.fromRGB(30,30,30)
+            activeTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         end
-        tabButton.BackgroundColor3 = Color3.fromRGB(60,60,60)
+        tabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
         activeTab = tabButton
         setTab(tabName)
     end)
-    
+
     return tabButton
 end
 
 local changelogTab = createTab("Changelog", 0)
 
-changelogTab.BackgroundColor3 = Color3.fromRGB(60,60,60)
+changelogTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 activeTab = changelogTab
 setTab("Changelog")
 
