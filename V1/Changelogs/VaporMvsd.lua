@@ -160,7 +160,29 @@ contentContainer:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateScrollSi
 
 local function setTab(tabName)
     if tabName == "Changelog" then
-        content.Text = [[New update coming soon, Stay tunned #VaporMvsd V1.5 , and thank you so much everyone we have over 500k injections. We will be giving you a nice giveaway in our discord server and or thru this script. [for those who do not have discord will be able to still join the giveaway thru this script soon] So stay tunned for the new changes of ProjectVapor, A Message tab will be back for you guys to give your amazing suggestions for us to view or reporting bugs if you do not have access to discord. If you do have discord please join our server, we love our members and can't wait to provide more for the community!   You can find our discord server invite in the Home tab!]]
+        content.Text = [[#VaporMvsd V1.6
+
+Ability Tab: Updated
+
+Added New ability cooldown [Teleporter]
+
+New Tab: Performance
+
+Performance Mode - will strip textures, shadows, particles, effects and etc
+
+FpsCounter - will display your current fps on screen
+
+RemoveTextures - will disable decals and etc
+
+RemoveParticlesEffects - will remove trains, beams, smoke, fire and etc
+
+RemoveAnimations - will freeze every animation, like everyone around you will slide (You included)
+
+RemoveShadows - u can remove bloom, blur, sun rays and etc
+
+FlatTerrainWater - will kill the grass blades and the animated water waves
+
+LowestGraphics - will set roblox own graphics to 1]]
     end
     task.wait()
     updateScrollSize()
@@ -179,14 +201,14 @@ local function createTab(tabName, position)
     tabButton.Font = Enum.Font.GothamBold
     tabButton.TextScaled = true
     tabButton.AutoButtonColor = false
-    
+
     local tabCorner = Instance.new("UICorner", tabButton)
     tabCorner.CornerRadius = UDim.new(0, 8)
-    
+
     local tabStroke = Instance.new("UIStroke", tabButton)
     tabStroke.Color = Color3.new(1, 1, 1)
     tabStroke.Thickness = 1
-    
+
     tabButton.MouseButton1Click:Connect(function()
         if activeTab then
             activeTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -195,7 +217,7 @@ local function createTab(tabName, position)
         activeTab = tabButton
         setTab(tabName)
     end)
-    
+
     return tabButton
 end
 
